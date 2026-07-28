@@ -1,11 +1,12 @@
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
-import { Button } from '@/components/ui/Button';
 import { MAX_PROMPT_LENGTH } from '@shared/schema';
 
 const EXAMPLES = [
   '5 days in Lisbon, food-focused, mid-budget',
-  'Weekend in Kyoto with kids — temples and parks',
+  'Weekend in Kyoto with kids — temples & parks',
   '10-day Iceland road trip in October',
+  '7 days in Rajasthan, culture & forts',
+  '4 days in Tokyo, anime & street food',
 ];
 
 interface Props {
@@ -37,50 +38,121 @@ export function PromptForm({ initialPrompt, loading, hasResult, onSubmit, onCanc
   };
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-3">
-      <label htmlFor="trip-prompt" className="text-sm font-semibold">
-        Describe your trip
-        <span className="ml-2 font-normal text-muted">
-          destination, days, interests, budget — plain words are fine
+    <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+      {/* Label */}
+      <div>
+        <label
+          htmlFor="trip-prompt"
+          style={{ display: 'block', fontWeight: 700, fontSize: '1rem', marginBottom: '4px', color: 'var(--ink)' }}
+        >
+          Where do you want to go?
+        </label>
+        <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
+          Destination · days · interests · budget — plain words work perfectly
         </span>
-      </label>
+      </div>
+
+      {/* Textarea */}
       <textarea
         id="trip-prompt"
+        className="trip-textarea"
         value={prompt}
         onChange={(e) => update(e.target.value)}
         onKeyDown={onKeyDown}
         rows={3}
         maxLength={MAX_PROMPT_LENGTH}
-        placeholder="e.g. 4 relaxed days in Barcelona in June, love architecture and seafood, medium budget"
-        className="w-full resize-y rounded-xl border border-edge bg-raised p-3 text-sm placeholder:text-muted/70"
+        placeholder="e.g. 5 relaxed days in Barcelona in June — love architecture, seafood, and sunset walks, medium budget"
       />
-      <div className="flex flex-wrap items-center gap-2">
-        <Button type="submit" variant="primary" loading={loading} disabled={!trimmed}>
-          {loading ? 'Planning…' : hasResult ? 'Regenerate' : 'Plan my trip'}
-        </Button>
+
+      {/* Actions Row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <button
+          id="plan-trip-btn"
+          type="submit"
+          disabled={!trimmed || loading}
+          className="btn-glow"
+          style={{
+            borderRadius: '12px',
+            padding: '11px 28px',
+            fontWeight: 700,
+            fontSize: '0.9rem',
+            color: '#fff',
+            border: 'none',
+            cursor: trimmed && !loading ? 'pointer' : 'not-allowed',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: '150px',
+            justifyContent: 'center',
+          }}
+        >
+          {loading ? (
+            <>
+              <span style={{
+                width: 14, height: 14,
+                borderRadius: '50%',
+                border: '2px solid rgba(255,255,255,0.3)',
+                borderTopColor: '#fff',
+                display: 'inline-block',
+                animation: 'spin 0.7s linear infinite',
+              }} />
+              Planning…
+            </>
+          ) : (
+            <>{hasResult ? '✨ Regenerate' : '🗺️ Plan my trip'}</>
+          )}
+        </button>
+
         {loading && (
-          <Button variant="ghost" onClick={onCancel}>
+          <button
+            type="button"
+            onClick={onCancel}
+            style={{
+              borderRadius: '10px',
+              padding: '10px 18px',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              color: 'var(--muted)',
+              background: 'var(--edge)',
+              border: '1px solid var(--edge-strong)',
+              cursor: 'pointer',
+              transition: 'all 150ms ease',
+            }}
+          >
             Cancel
-          </Button>
+          </button>
         )}
-        <span className="hidden text-xs text-muted sm:inline" aria-hidden="true">
+
+        <span style={{ fontSize: '0.73rem', color: 'var(--muted)', marginLeft: 'auto' }}>
           ⌘/Ctrl + Enter
         </span>
       </div>
+
+      {/* Example chips */}
       {!hasResult && !loading && (
-        <div className="flex flex-wrap gap-2" aria-label="Example trips">
-          {EXAMPLES.map((ex) => (
-            <button
-              key={ex}
-              type="button"
-              className="press rounded-full border border-edge bg-raised px-3 py-1.5 text-xs text-muted transition-colors hover:border-accent hover:text-ink"
-              onClick={() => update(ex)}
-            >
-              {ex}
-            </button>
-          ))}
+        <div>
+          <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Try an example
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {EXAMPLES.map((ex) => (
+              <button
+                key={ex}
+                type="button"
+                className="example-chip"
+                onClick={() => update(ex)}
+              >
+                {ex}
+              </button>
+            ))}
+          </div>
         </div>
       )}
+
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </form>
   );
 }

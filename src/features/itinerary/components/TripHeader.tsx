@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import type { Itinerary } from '@shared/schema';
-import { Button } from '@/components/ui/Button';
 
 interface Props {
   itinerary: Itinerary;
@@ -20,35 +19,105 @@ export function TripHeader({ itinerary, canUndo, onExpandAll, onCollapseAll, onU
   }, [itinerary]);
 
   return (
-    <header className="space-y-2">
-      <h2 tabIndex={-1} className="text-xl font-bold [overflow-wrap:anywhere] sm:text-2xl">
-        {itinerary.title}
-      </h2>
-      {itinerary.summary && <p className="text-sm text-muted">{itinerary.summary}</p>}
-      <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
-        <span className="rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-ink">
-          {itinerary.days.length} {itinerary.days.length === 1 ? 'day' : 'days'}
-        </span>
-        <span className="rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-ink">
-          {stats.stopCount} stops
-        </span>
-        {stats.hours > 0 && (
-          <span className="rounded-full bg-accent-soft px-2.5 py-1 font-semibold text-ink">
-            ~{stats.hours}h planned
+    <header
+      className="glass rise"
+      style={{
+        borderRadius: '20px',
+        padding: '20px 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '14px',
+        boxShadow: 'var(--shadow)',
+      }}
+    >
+      {/* Title */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+          <span style={{ fontSize: '1.5rem' }}>🗺️</span>
+          <h2
+            tabIndex={-1}
+            style={{
+              fontSize: 'clamp(1.1rem, 3vw, 1.5rem)',
+              fontWeight: 800,
+              fontFamily: "'Syne', sans-serif",
+              color: 'var(--ink)',
+              margin: 0,
+              wordBreak: 'break-word',
+            }}
+          >
+            {itinerary.title}
+          </h2>
+        </div>
+        {itinerary.summary && (
+          <p style={{ fontSize: '0.875rem', color: 'var(--muted)', margin: 0, lineHeight: 1.5 }}>
+            {itinerary.summary}
+          </p>
+        )}
+      </div>
+
+      {/* Stats Row */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+        {/* Stat chips */}
+        {[
+          { icon: '📅', label: `${itinerary.days.length} ${itinerary.days.length === 1 ? 'day' : 'days'}` },
+          { icon: '📍', label: `${stats.stopCount} stops` },
+          ...(stats.hours > 0 ? [{ icon: '⏱️', label: `~${stats.hours}h planned` }] : []),
+        ].map(({ icon, label }) => (
+          <span
+            key={label}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              background: 'rgba(108,99,255,0.1)',
+              border: '1px solid rgba(108,99,255,0.2)',
+              borderRadius: '999px',
+              padding: '4px 12px',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              color: 'var(--ink)',
+            }}
+          >
+            <span>{icon}</span> {label}
           </span>
-        )}
-        <span className="mx-1 hidden h-4 w-px bg-edge sm:block" aria-hidden="true" />
-        <Button variant="ghost" className="!min-h-9 !px-2 !text-xs" onClick={onExpandAll}>
-          Expand all
-        </Button>
-        <Button variant="ghost" className="!min-h-9 !px-2 !text-xs" onClick={onCollapseAll}>
-          Collapse all
-        </Button>
-        {canUndo && (
-          <Button variant="ghost" className="!min-h-9 !px-2 !text-xs" onClick={onUndo}>
-            ↩ Undo
-          </Button>
-        )}
+        ))}
+
+        {/* Divider */}
+        <span style={{ flex: 1 }} />
+
+        {/* Action buttons */}
+        {[
+          { label: 'Expand all', onClick: onExpandAll },
+          { label: 'Collapse all', onClick: onCollapseAll },
+          ...(canUndo ? [{ label: '↩ Undo', onClick: onUndo }] : []),
+        ].map(({ label, onClick }) => (
+          <button
+            key={label}
+            type="button"
+            onClick={onClick}
+            style={{
+              background: 'var(--edge)',
+              border: '1px solid var(--edge-strong)',
+              borderRadius: '8px',
+              padding: '5px 12px',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              color: 'var(--muted)',
+              cursor: 'pointer',
+              transition: 'all 150ms ease',
+            }}
+            onMouseEnter={e => {
+              (e.target as HTMLElement).style.color = 'var(--ink)';
+              (e.target as HTMLElement).style.background = 'var(--edge-strong)';
+            }}
+            onMouseLeave={e => {
+              (e.target as HTMLElement).style.color = 'var(--muted)';
+              (e.target as HTMLElement).style.background = 'var(--edge)';
+            }}
+          >
+            {label}
+          </button>
+        ))}
       </div>
     </header>
   );
