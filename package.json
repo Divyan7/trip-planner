@@ -8,6 +8,7 @@
     "dev": "npm start",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "start:api": "node --loader tsx/esm server/dev.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

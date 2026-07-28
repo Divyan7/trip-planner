@@ -3,6 +3,11 @@ import { err, type Meta, type Result } from '@shared/result';
 
 const CLIENT_TIMEOUT_MS = 35_000; // slightly above the server's 30s deadline
 
+// In production, __API_BASE__ is replaced by Vite with the Render backend URL.
+// In dev, it is an empty string so relative /api paths work via the Vite proxy.
+declare const __API_BASE__: string;
+const API_BASE = typeof __API_BASE__ !== 'undefined' ? __API_BASE__ : '';
+
 export interface GenerationSuccess {
   itinerary: Itinerary;
   warnings: string[];
@@ -20,7 +25,7 @@ export async function requestItinerary(
 ): Promise<Result<GenerationSuccess>> {
   let res: Response;
   try {
-    res = await fetch('/api/itinerary', {
+    res = await fetch(`${API_BASE}/api/itinerary`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt }),

@@ -16,6 +16,15 @@ try {
 const app = express();
 app.use(express.json({ limit: '100kb' }));
 
+// Allow requests from the Vercel-deployed frontend (set ALLOWED_ORIGIN env var)
+const allowedOrigin = process.env.ALLOWED_ORIGIN ?? '*';
+app.use((_req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 const provider = pickProvider(process.env);
 console.log(`[trip-planner] provider: ${provider.name} (${provider.model})`);
 
