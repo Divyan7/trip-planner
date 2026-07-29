@@ -4,7 +4,6 @@ import { useGeneration } from './hooks/useGeneration';
 import { useAnnouncer } from '@/components/LiveRegion';
 import { useToast } from '@/components/Toast';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { Button } from '@/components/ui/Button';
 import { PromptForm } from './components/PromptForm';
 import { TripHeader } from './components/TripHeader';
 import { DaySection } from './components/DaySection';
