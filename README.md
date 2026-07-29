@@ -16,40 +16,6 @@ A full-stack AI-powered Trip Planner web application that helps users plan perso
 * 🌐 REST API integration
 * 🎨 Modern UI built with React and Tailwind CSS
 
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-* React Router
-* Axios
-
-### Backend
-
-* Node.js
-* Express.js
-* TypeScript
-
-### Database
-
-* PostgreSQL
-
-### ORM
-
-* Prisma
-
-### Other Tools
-
-* JWT Authentication
-* REST APIs
-* Git & GitHub
-
----
 
 ## 📂 Project Structure
 
@@ -58,7 +24,6 @@ trip-planner/
 │
 ├── client/               # React Frontend
 ├── server/               # Express Backend
-├── prisma/               # Database schema
 ├── public/               # Static assets
 ├── package.json
 ├── tsconfig.json
@@ -108,37 +73,11 @@ Create a `.env` file in the project root and configure the required environment 
 Example:
 
 ```env
-DATABASE_URL=your_database_url
 JWT_SECRET=your_secret_key
 OPENAI_API_KEY=your_api_key
 ```
 
 > Replace the above values with your own credentials.
-
----
-
-## 📸 Screenshots
-
-Add screenshots of the following pages:
-
-* Home Page
-* Login/Register
-* Trip Planner
-* Generated Itinerary
-* Dashboard
-
----
-
-## 📈 Future Enhancements
-
-* Hotel recommendations
-* Flight booking integration
-* Weather forecasting
-* Google Maps integration
-* AI-powered travel suggestions
-* Trip sharing with friends
-* PDF itinerary export
-* Expense tracking
 
 ---
 
